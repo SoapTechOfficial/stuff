@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Break the Vape – Mini Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #0b1120;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #game button {
+      border-radius: 10px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #ff4b81, #ff9fbf);
+      border: none;
+      color: #0b1120;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      margin: 10px;
+    }
+
+    #game button:hover {
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 10px 20px;
+      background: #1e293b;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      border: 1px solid #334155;
+    }
+
+    .back-btn:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Break the Vape</h1>
+  <p>Make healthy choices. Keep your lung health high.</p>
+
+  <div id="game">
+    <p id="game-text">You start your school day feeling good. Your lung health is full.</p>
+    <p><strong>Lung Health: <span id="health">100</span>%</strong></p>
+    <div id="choices"></div>
+  </div>
+
+  <a href="index.html" class="back-btn">← Back to Home</a>
+
+  <script>
+    let health = 100;
+    let step = 0;
+
+    const scenarios = [
+      {
+        text: "A friend offers you a vape between classes.",
+        choices: [
+          { text: "Say no and walk away", effect: +10 },
+          { text: "Take a puff", effect: -30 }
+        ]
+      },
+      {
+        text: "You feel stressed about homework.",
+        choices: [
+          { text: "Take a break and breathe", effect: +10 },
+          { text: "Use a vape to calm down", effect: -25 }
+        ]
+      },
+      {
+        text: "Someone pressures you to try a new flavour.",
+        choices: [
+          { text: "Stand your ground", effect: +15 },
+          { text: "Give in", effect: -35 }
+        ]
+      }
+    ];
+
+    function nextStep() {
+      if (step >= scenarios.length) {
+        endGame();
+        return;
+      }
+
+      const s = scenarios[step];
+      document.getElementById("game-text").textContent = s.text;
+
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+
+      s.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice.text;
+        btn.onclick = () => {
+          health += choice.effect;
+          if (health > 100) health = 100;
+          if (health < 0) health = 0;
+          document.getElementById("health").textContent = health;
+          step++;
+          nextStep();
+        };
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    function endGame() {
+      const text = document.getElementById("game-text");
+      const choices = document.getElementById("choices");
+
+      if (health >= 70) {
+        text.textContent = "You made strong choices today. Your lungs thank you.";
+      } else if (health >= 40) {
+        text.textContent = "You struggled a bit, but you’re learning. Tomorrow can be better.";
+      } else {
+        text.textContent = "Your choices hurt your health today. But you can always choose differently next time.";
+      }
+
+      choices.innerHTML = "";
+    }
+
+    nextStep();
+  </script>
+
+</body>
+</html>
